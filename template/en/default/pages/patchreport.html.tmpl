@@ -1,0 +1,77 @@
+[%# 1.0@bugzilla.org %]
+[%# -*- mode: html -*- %]
+[%# The contents of this file are subject to the Mozilla Public
+  # License Version 1.1 (the "License"); you may not use this file
+  # except in compliance with the License. You may obtain a copy of
+  # the License at http://www.mozilla.org/MPL/
+  #
+  # Software distributed under the License is distributed on an "AS
+  # IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+  # implied. See the License for the specific language governing
+  # rights and limitations under the License.
+  #
+  # The Original Code is the Bugzilla Bug Tracking System.
+  #
+  # Copyright (C) 2005 Olav Vitters.
+  #
+  #%]
+
+[%# INTERFACE:
+  # This template has no interface.
+  #%]
+
+[% PROCESS global/variables.none.tmpl %]
+
+[% title = "Patch Report" %]
+[% PROCESS global/header.html.tmpl
+    h1 = "" %]
+
+  <center><h1>[% patch_type FILTER html %] Patches</h1></center>
+
+[% FOREACH product = stats.product_list %]
+  <h3>[% product.name FILTER html %]<a name="[% product.name FILTER html %]"></a> ([% product.count FILTER html %])</h3>
+  <ul>
+  
+  [% FOREACH component = product.component_list %]
+    <li>Component: [% component.name FILTER html %] ([% component.count FILTER html %])</li>
+    <ul>
+
+    [% FOREACH bug = component.bug_list %]
+      <li>[% terms.Bug %] <a href="show_bug.cgi?id=[% bug.id FILTER uri %]">[% bug.id FILTER html %]</a>: 
+          [% bug.summary FILTER html %] ([% "$bug.priority / $bug.severity" FILTER html %])</li>
+      <ul>
+
+      [% FOREACH patch = bug.patch_list %]
+        <li><i>Attachment [% patch.id FILTER html %]</i> ([% patch.age FILTER html %] days)
+        <a href="attachment.cgi?id=[% patch.id FILTER uri %]&amp;action=diff">
+          [% patch.description FILTER html %]</a>
+        </li>
+      [% END %]
+
+      </ul>
+    [% END %]    
+
+    </ul>
+  [% END %]
+  </ul>
+[% END %]
+
+[% IF stats.count > 1 %]
+  <p>[% stats.count FILTER html %] [% type FILTER lower FILTER html %] patches found.</p>
+[% ELSIF stats.count == 1 %]
+  <p>[% stats.count FILTER html %] [% type FILTER lower FILTER html %] patch found.</p>
+[% ELSE %]
+  <p>No patches found matching your criteria.</p>
+[% END %]
+
+<!-- 
+  SOME USEFUL PARAMETERS TO PASS THIS SCRIPT:
+  product   (Only show unreviewed patches in this product)
+  component (Only show unreviewed patches in this component)
+  min_days  (Don't show patches younger than this)
+  max_days  (Don't show patches older than this)
+ -->
+
+<p> If you spot any errors in this page please report it to the bugzilla component of bugzilla.gnome.org. Thanks.</p>
+
+[% PROCESS global/footer.html.tmpl %]
