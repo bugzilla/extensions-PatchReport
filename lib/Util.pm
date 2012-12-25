@@ -171,9 +171,6 @@ sub get_unreviewed_patches_and_stats {
                        OR bugs.bug_status = 'ASSIGNED'
                        OR bugs.bug_status = 'REOPENED')
              ORDER BY products.name, components.name, attachments.bug_id, attachments.attach_id";
-    open(BLABLABLA, ">/tmp/foobar") || die "Crap!\n";
-    print BLABLABLA "hello world\n" . $query . "\n";
-
 
     my $sth = $dbh->prepare($query);
     $sth->execute();
